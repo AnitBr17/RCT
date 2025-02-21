@@ -1,0 +1,44 @@
+import { useState } from 'react'
+
+import './App.css'
+
+import React, { useState, useEffect } from 'react';
+import { firestore } from './firebase-config'; 
+
+const TaskList = () => {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const firebase = firestore.collection('tasks').onSnapshot(snapshot => {
+      setTasks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return ()=>firebase();
+  },); 
+  return (
+    <div>
+      <h1>Tasks</h1>
+      <ul>
+        {tasks.map(task => (
+          <li key={task.id}>{task.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default TaskList;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello</h1>
+</body>
+</html>
+
+
+
